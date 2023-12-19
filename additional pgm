@@ -1,0 +1,25 @@
+class Modulus {
+public static void main(String args[]) {
+int x = 42;
+double y = 42.25;
+
+byte a = 64, b,b1; 
+int i;
+i = a << 2; 
+b = (byte) (a << 2);
+i = a << 2;
+
+System.out.println("Original value of a:" + a);
+System.out.println(" and b:"+ i + "" +b);
+
+int a1=-1;
+a1=a1>>24; 
+System.out.println("value of a1: " + a1);
+
+a1=-1;
+a1=a1>>>24; 
+System.out.println("value of a1: " + a1);
+
+}
+}
+
