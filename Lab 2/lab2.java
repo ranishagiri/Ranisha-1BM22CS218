@@ -1,77 +1,115 @@
 import java.util.Scanner;
 
-class Subject{
-	int SubjectMarks; int credits; int grade;
-}
 
-class Student{
-	Subject subject[];
-	String name, usn;
-	double sgpa;
-	Scanner sc;
+class student{
+	String usn,name;
 	int n;
+	String subject[]=new String[10];
+	int credits[]=new int[10];
+	int marks[]=new int[10];
 	
-	Student(){
-		subject = new Subject[10];
-		sc = new Scanner(System.in);
-		System.out.println("Enter no.  of subjects: ");
-		n = sc.nextInt();
-		for(int i = 0; i < 9; i++){
-			subject[i] = new Subject();
-		}
-		sc.nextLine();
 		
-	}
-	
-	void getStudentDetails(){
+	void read(){
+		Scanner input= new Scanner(System.in);
 		
-		System.out.println("Enter name: ");
-		name = sc.nextLine();
-		System.out.println("Enter usn: ");
-		usn = sc.nextLine();
-	}
-	
-	void getMarks(){
-		System.out.println("\n");
-		for(int i = 0; i < n; i++){
-			System.out.println("Enter no. of credits: ");
-			subject[i].credits = sc.nextInt();
-			System.out.println("Enter marks obtained: ");
-			subject[i].SubjectMarks = sc.nextInt();
-			System.out.println("\n");
-			if (subject[i].SubjectMarks > 100) subject[i].SubjectMarks = 100;
-			else if (subject[i].SubjectMarks < 40) subject[i].SubjectMarks = 0;	
-			subject[i].grade = (subject[i].SubjectMarks / 10) + 1;
-			if (subject[i].grade == 11) subject[i].grade = 10;
-			if (subject[i].SubjectMarks >= 40 && subject[i].SubjectMarks < 50) subject[i].grade = 4;
-			else if (subject[i].SubjectMarks >= 50 && subject[i].SubjectMarks < 55) subject[i].grade = 5;
-			else if (subject[i].SubjectMarks >= 55 && subject[i].SubjectMarks < 60) subject[i].grade = 6;
-						
+		System.out.print("Enter your name:");
+		name=input.nextLine();
+		
+		System.out.print("\n");
+		System.out.print("Enter your USN:");
+		usn=input.nextLine();
+		System.out.print("\n");
+
+		System.out.print("Enter number of subjects:");
+		n=input.nextInt();
+
+		input.nextLine();
+
+		
+		System.out.print("\n");
+		for(int i=0;i<n;i++){
+			System.out.println("---------------------");
+			System.out.print("Enter subject:");
+			subject[i]=input.nextLine();
+			
+			System.out.print("\n");
+
+			System.out.print("Enter credits:");
+			credits[i]=input.nextInt();
+
+			System.out.print("\n");
+			
+			System.out.print("Enter Marks:");
+			marks[i]=input.nextInt();
+
+
+			System.out.print("\n");
+			System.out.println("---------------------");
+			input.nextLine();
+			
+
 		}
+		
+	
 	}
 
-	double computeSGPA(){
-		int effective = 0, credits = 0;
-		for(int i = 0; i < n; i++){
-			effective += (subject[i].grade * subject[i].credits);
-			credits += subject[i].credits;
+	void display(){
+		
+
+		
+		System.out.println("-------------------------------------------");
+
+		System.out.println("Name:"+name);
+		System.out.println("USN:"+usn+"\n");
+		
+		System.out.println("Subject\tCredits\tMarks");
+		System.out.println("---------------------");
+		for(int i=0;i<n;i++){
+		
+			System.out.println(subject[i]+"\t"+credits[i]+"\t"+marks[i]);
+		}
+		System.out.println("--------------------------------------------");
+	}
+	
+	int grade(int a){
+		
+		while(a/10!=0){
+			a=a/10;
+		}
+		if((a+1)>5){
+			return (a+1);
+		}
+		else if((a+1)==5){	
+			return a;
+		}
+		else{return 0;}
+	
+	}
+
+	void calculate(){
+		
+		int total_credits=0;
+		int marks_credits=0;
+
+		
+		for(int i=0;i<n;i++){
+		
+			total_credits+=credits[i];
+			marks_credits+=grade(marks[i])*credits[i];
+		
 		}
 		
-		sgpa = effective/credits;
-		return sgpa;
-		
+		System.out.println("SGPA is "+(double)marks_credits/total_credits); 
 	}
 }
 
-class StudentMain{
-	public static void main(String args[]){
-		Student student = new Student();
-		System.out.println("Ranisha Giri - 1BM22CS218");
-		student.getStudentDetails();
-		student.getMarks();
-		System.out.println("Name of student is: " + student.name);
-		System.out.println("USN of student is: " + student.usn);
-		System.out.println("SGPA of student is: " + student.computeSGPA());
-	}
+class marks{
+	public static void main(String[] args){
 	
+	student calc= new student();
+	calc.read();
+	calc.display();
+	calc.calculate();
+
+	}
 }
