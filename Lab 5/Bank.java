@@ -1,122 +1,164 @@
 import java.util.Scanner;
-import java.lang.*;
-
-class Account {
+class account
+{
 	String name;
-	int acc_no;
-	boolean current;
-	double balance = 0;
-	int min_balance = 100;
-	Scanner sc = new Scanner(System.in);
-
-	Account(){
-		if(this.getClass() == CurrentAcc.class){
-			current = true;
-		} else {
-			current = false;
-		}
-		System.out.print("Enter name: ");
-		name = sc.next();
-		System.out.print("Enter account no.: ");
-		acc_no = sc.nextInt();	
+	int accno;
+	String type;
+	double balance;
+	
+	account(String name,int accno,String type,double balance)
+	{
+		this.name=name;
+		this.accno=accno;
+		this.type=type;
+		this.balance=balance;
 	}
-
-	void deposit() {
-		System.out.print("Enter deposit amount: ");
-		balance += sc.nextDouble();
+	void deposit(double amount)
+	{ 
+		balance+=amount;
 	}
-
-	void withdraw() {
-		System.out.print("Enter withdraw amount: ");
-		double withdraw = sc.nextDouble();
-		while (withdraw > balance) {
-			System.out.print("Withdraw amount greater than balance, enter new amount: ");
-			withdraw = sc.nextDouble();
+	void withdraw(double amount)
+	{
+		if((balance-amount)>=0)
+		{	
+			balance-=amount;
 		}
-		balance -= withdraw;
-		if (current && balance < min_balance) {
-			System.out.println("Below min balance of 100, removing remaining money in account");
-			balance = 0;
+		else
+		{
+			System.out.println("insufficient balance,cant withdraw");
 		}
 	}
-
-	void withdraw(double withdraw) {
-		if (withdraw > balance) {
-			System.out.println("Withdraw amount greater than balance");
-		}
-		if (current && balance < min_balance) {
-			System.out.println("Below min balance of 100, removing remaining money in account");
-			balance = 0;
-		}
-	}
-
-	void showBalance() {
-		System.out.print("balance = " + balance);
+		
+	void display()
+	{
+		System.out.println("name:"+name+" accno:"+accno+" type:"+type+" balance:"+balance);
 	}
 }
-
-class CurrentAcc extends Account {
-	void cheque(){
-		System.out.print("Enter cheque amount: ");
-		double cheque = sc.nextDouble();
-		withdraw(cheque);
-		System.out.println("Cheque created...");
-
+class savAcct extends account
+{
+	
+	private static double rate=5;
+	savAcct(String name,int accno,double balance)
+	{
+		super(name,accno,"savings",balance);
+	
 	}
-}
-
-class SavingsAcc extends Account {
-	void compound(int t, int r) {
-		balance = balance * (Math.pow((1 + ((double) r / 100)), t));
-		System.out.print("Balance after given rate and time = " + balance);
+	
+	void interest()
+	{
+		balance+=balance*(rate)/100;
+		System.out.println("balance:"+balance);
 	}
+	
+	
 }
+class curAcct extends account
+{
 
-class Bank {
-	public static void main(String args[]) {
-		SavingsAcc john = new SavingsAcc();
-		CurrentAcc smith = new CurrentAcc();
-		Account ref = null;
-		Scanner sc = new Scanner(System.in);
-		int acc, choice;
-		System.out.println("------MENU------\n");
-		System.out.println(
-				"1.Deposit\n2.Withdraw\n3.Compute intrest for Savings Acc\n4.Display account details\n5. Create cheque\n6.Exit\nChoice:");
-		choice = sc.nextInt();
-		System.out.println("Enter account no.: ");
-		acc = sc.nextInt();
-		if (acc == 1) {
-			ref = john;
-		} else {
-			ref = smith;
+	private double minBal=500;
+	private double serviceCharges=50;
+	
+	curAcct(String name,int accno,double balance)
+	{
+		super(name,accno,"current",balance);
+		
+	}
+	
+	
+	void checkmin()
+	{	
+		
+		if(balance<minBal)
+		{
+			System.out.println("balance is less than min balance,service charges imposed:"+serviceCharges);
+			balance-=serviceCharges;
+			System.out.println("balance is:"+balance);
 		}
-		while (choice != 6) {
-			if (choice == 1) {
-				ref.deposit();
-			} else if (choice == 2) {
-				ref.withdraw();
-			} else if (choice == 3) {
-				if (acc == 1) {
-					john.compound(1, 5);
-				} else {
-					System.out.println("Not a savings account");
-				}
-			} else if (choice == 4) {
-				ref.showBalance();
-			} else if (choice == 5) {
-				if (acc == 2) {
-					smith.cheque();
-				} else {
-					System.out.println("Not a current account");
+
+	}
+	
+}
+class accountMain
+{
+	public static void main(String a[])
+	{
+		Scanner s=new Scanner(System.in);
+		System.out.println("enter the name :");
+		String name=s.next();
+		System.out.println("enter the type(current/savings):");
+		String type=s.next();
+		System.out.println("enter the account number:");
+		int accno=s.nextInt();
+		System.out.println("enter the intial balance:");
+		double balance=s.nextDouble();
+		int ch;
+		double amount1,amount2;
+		account acc=new account(name,accno,type,balance);
+		savAcct sa=new savAcct(name,accno,balance);
+		curAcct ca=new curAcct(name,accno,balance);
+		while(true)
+		{
+			if(acc.type.equals("savings"))
+			{
+				System.out.println("\nMenu\n1.deposit 2.withdraw 3.compute interest 4.display 5.exit");
+				System.out.println("enter the choice:");
+				ch=s.nextInt();
+				switch(ch)
+				{
+					case 1:System.out.println("enter the amount:");
+						amount1=s.nextInt();
+						sa.deposit(amount1);
+						break;
+					case 2:System.out.println("enter the amount:");
+						amount2=s.nextInt();
+						sa.withdraw(amount2);
+						break;
+					case 3:sa.interest();
+						break;
+					case 4:sa.display();
+						break;
+					case 5:System.exit(0);
+					default:System.out.println("invalid input");
+						break;
 				}
 			}
-			System.out.println("Enter account no.: ");
-			acc = sc.nextInt();
-			System.out.println("------MENU------\n");
-			System.out.println(
-					"1.Deposit\n2.Withdraw\n3.Compute intrest for Savings Acc\n4.Display account details\n5. Create cheque\n6.Exit\nChoice:");
-			choice = sc.nextInt();
+			else
+			{
+				System.out.println("\nMenu\n1.deposit 2.withdraw  3.display 4.exit");
+				System.out.println("enter the choice:");
+				ch=s.nextInt();
+				switch(ch)
+				{
+					case 1:System.out.println("enter the amount:");
+						amount1=s.nextInt();
+						ca.deposit(amount1);
+						break;
+					case 2:System.out.println("enter the amount:");
+						amount2=s.nextInt();
+						ca.withdraw(amount2);
+						ca.checkmin();
+						break;
+					
+					case 3:ca.display();
+						break;
+					case 4:System.exit(0);
+					default:System.out.println("invalid input");
+						break;
+				}
+			}
 		}
-
+				
+				
+				
+				
+			
+		
 	}
 }
+
+	
+	
+	
+		
+	
+	
