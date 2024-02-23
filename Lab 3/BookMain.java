@@ -22,7 +22,7 @@ class Book{
 
 class BookMain{
 	public static void main(String args[]){
-		System.out.println("Pranav Y - 1BM22CS204");
+		System.out.println("Ranisha Giri- 1BM22CS218");
 		Book books[] = new Book[10];
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter no. of book objects: ");
